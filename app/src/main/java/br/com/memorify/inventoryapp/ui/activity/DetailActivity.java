@@ -2,7 +2,9 @@ package br.com.memorify.inventoryapp.ui.activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,7 +22,7 @@ public class DetailActivity extends AppCompatActivity {
 
     public static final int REQUEST_DETAIL = 11;
     private static final String PRODUCT_ID_KEY = "PRODUCT_ID_KEY";
-    public static final int RESULT_DELETED_PRODUCT = 3;
+    public static final int RESULT_UPDATED_PRODUCT = 3;
 
     private ImageView pictureImageView;
     private TextView nameTextView;
@@ -28,6 +30,8 @@ public class DetailActivity extends AppCompatActivity {
     private TextView priceTextView;
     private TextView supplierTextView;
     private Button contactSupplierButton;
+    private Button saleButton;
+    private Button shipmentButton;
 
     private Product selectedProduct;
 
@@ -63,6 +67,8 @@ public class DetailActivity extends AppCompatActivity {
         priceTextView = (TextView) findViewById(R.id.product_price);
         supplierTextView = (TextView) findViewById(R.id.product_supplier);
         contactSupplierButton = (Button) findViewById(R.id.contact_supplier_button);
+        saleButton = (Button) findViewById(R.id.add_sale_button);
+        shipmentButton = (Button) findViewById(R.id.add_shipment_button);
     }
 
     private void setupViews() {
@@ -70,10 +76,38 @@ public class DetailActivity extends AppCompatActivity {
         stockTextView.setText(getString(R.string.product_stock_field, selectedProduct.stock));
         priceTextView.setText(getString(R.string.product_price_field, selectedProduct.price));
         supplierTextView.setText(getString(R.string.product_supplier_field, selectedProduct.supplierContact));
+        Bitmap picture = selectedProduct.getPicture();
+        if (picture == null) {
+            pictureImageView.setImageDrawable(ContextCompat.getDrawable(getBaseContext(), R.drawable.no_image));
+        } else {
+            pictureImageView.setImageBitmap(picture);
+        }
         contactSupplierButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 sendEmailToSupplier();
+            }
+        });
+        saleButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    selectedProduct.sale(getBaseContext());
+                    setupViews();
+                    Toast.makeText(getBaseContext(), "Sold one " + selectedProduct.name + ".", Toast.LENGTH_SHORT).show();
+                    setResult(RESULT_UPDATED_PRODUCT);
+                } catch (Product.NotEnoughInStockToSellException e) {
+                    Toast.makeText(getBaseContext(), "Not enought in stock in order to sell.", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        shipmentButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectedProduct.ship(getBaseContext());
+                setupViews();
+                Toast.makeText(getBaseContext(), "Ship one " + selectedProduct.name + ".", Toast.LENGTH_SHORT).show();
+                setResult(RESULT_UPDATED_PRODUCT);
             }
         });
     }
@@ -103,7 +137,7 @@ public class DetailActivity extends AppCompatActivity {
         if (id == R.id.action_delete) {
             DatabaseManager.getInstance(getBaseContext()).deleteProduct(selectedProduct._id);
             Toast.makeText(getBaseContext(), "Product was deleted successfully.", Toast.LENGTH_SHORT).show();
-            setResult(RESULT_DELETED_PRODUCT);
+            setResult(RESULT_UPDATED_PRODUCT);
             finish();
             return true;
         }

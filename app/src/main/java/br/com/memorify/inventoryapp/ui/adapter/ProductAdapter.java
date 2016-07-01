@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -70,11 +71,11 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
         }
 
         public void bind(final Product product) {
-            // TODO: Bind picture
-            if (product.picture == null) {
+            if (product.pictureAsByteArray == null) {
                 pictureImageView.setVisibility(View.GONE);
             } else {
                 pictureImageView.setVisibility(View.VISIBLE);
+                pictureImageView.setImageBitmap(product.getPicture());
             }
             nameTextView.setText(product.name);
             stockTextView.setText(context.getString(R.string.product_stock_field, product.stock));
@@ -82,7 +83,13 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
             saleButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    // TODO: Open dialog
+                    try {
+                        product.sale(context);
+                        bind(product);
+                        Toast.makeText(context, "Sold one " + product.name + ".", Toast.LENGTH_SHORT).show();
+                    } catch (Product.NotEnoughInStockToSellException e) {
+                        Toast.makeText(context, "Not enought in stock in order to sell.", Toast.LENGTH_SHORT).show();
+                    }
                 }
             });
             contentView.setOnClickListener(new View.OnClickListener() {

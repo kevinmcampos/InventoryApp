@@ -18,7 +18,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import java.io.File;
 
@@ -42,6 +41,8 @@ public class AddProductDialog extends DialogFragment {
     private TextInputLayout nameEditLayoutView;
     private TextInputLayout stockEditLayoutView;
     private TextInputLayout priceEditLayoutView;
+
+    private Bitmap photoTaken;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -147,23 +148,11 @@ public class AddProductDialog extends DialogFragment {
             product.name = name;
             product.price = Double.parseDouble(price);
             product.stock = Long.parseLong(stock);
-//            product.picture = // TODO: SAVE PICTURE
+            product.pictureAsByteArray = ImageHelper.getBitmapAsByteArray(photoTaken);
             product.supplierContact = Product.getRandomSupplier();
             DatabaseManager.getInstance(getActivity()).insertProduct(product);
         }
         return !shouldCancel;
-
-
-//        InventoryDbHelper db = new InventoryDbHelper(getActivity());
-//        String name = nameEditText.getText().toString();
-//        int price = Integer.parseInt(priceEditText.getText().toString());
-//        int quantity = Integer.parseInt(quantityEditText.getText().toString());
-//
-//        // TODO: Add some verification that the item is legit
-//
-//        Product product = new Product(name, quantity, price);
-//        db.addProduct(product);
-//        dismissAllowingStateLoss();
     }
 
     @Override
@@ -192,7 +181,7 @@ public class AddProductDialog extends DialogFragment {
     }
 
     private void handlePhotoTakenFromDefaultCamera() {
-        Bitmap photoTaken = ImageHelper.getPhotoTakenFromAndroid(Environment.getExternalStorageDirectory() + "/tmpimagefile.jpg");
+        photoTaken = ImageHelper.getPhotoTakenFromAndroid(Environment.getExternalStorageDirectory() + "/tmpimagefile.jpg");
         pictureImageView.setImageBitmap(photoTaken);
     }
 }

@@ -3,6 +3,8 @@ package br.com.memorify.inventoryapp.util;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
+import java.io.ByteArrayOutputStream;
+
 public class ImageHelper {
 
     public static Bitmap getPhotoTakenFromAndroid(String takenPhotoPath) {
@@ -32,5 +34,14 @@ public class ImageHelper {
             }
         }
         return inSampleSize;
+    }
+
+    public static byte[] getBitmapAsByteArray(Bitmap bitmap) {
+        if (bitmap == null) {
+            return null;
+        }
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 0, outputStream);
+        return outputStream.toByteArray();
     }
 }

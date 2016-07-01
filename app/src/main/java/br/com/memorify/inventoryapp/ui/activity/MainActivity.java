@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity implements DialogInterface.O
         allProducts = DatabaseManager.getInstance(getBaseContext()).getAllProducts();
         productListView.setHasFixedSize(true);
         productListView.setLayoutManager(new LinearLayoutManager(getBaseContext()));
-        productAdapter = new ProductAdapter(getBaseContext(), allProducts, new ProductAdapter.ItemClickListener() {
+        productAdapter = new ProductAdapter(this, allProducts, new ProductAdapter.ItemClickListener() {
             @Override
             public void onItemClicked(Product product) {
                 DetailActivity.startDetail(MainActivity.this, product._id);
@@ -97,7 +97,7 @@ public class MainActivity extends AppCompatActivity implements DialogInterface.O
         if (addProductDialog != null) {
             addProductDialog.onActivityResult(requestCode, resultCode, data);
         }
-        if (requestCode == DetailActivity.REQUEST_DETAIL && resultCode == DetailActivity.RESULT_DELETED_PRODUCT) {
+        if (requestCode == DetailActivity.REQUEST_DETAIL && resultCode == DetailActivity.RESULT_UPDATED_PRODUCT) {
             refreshDataFromDB();
         }
     }
