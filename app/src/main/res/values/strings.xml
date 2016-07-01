@@ -1,0 +1,30 @@
+<resources>
+    <string name="app_name">InventoryApp</string>
+
+    <string name="product_price">Price</string>
+
+    <!-- Main -->
+    <string name="no_items">No items, click on add button to create one.</string>
+
+    <!-- Add Product Dialog -->
+    <string name="product_initial_stock">Initial stock</string>
+    <string name="action_take_photo">TAKE PHOTO</string>
+    <string name="product_name">Product name</string>
+    <string name="error_required_field">Required field</string>
+
+    <!-- Amount Dialog -->
+    <string name="action_add">ADD</string>
+    <string name="action_remove">REMOVE</string>
+
+    <!-- Product Details -->
+    <string name="action_delete">DELETE</string>
+    <string name="action_order_more">ORDER MORE</string>
+
+    <!-- Product readable -->
+    <string name="product_price_field">Price: R$%1$.2f</string>
+    <string name="product_stock_field">Stock: %1$s</string>
+    <string name="product_supplier_field">Supplier: %1$s</string>
+    <string name="action_add_shipment">ADD SHIPMENT</string>
+    <string name="action_add_sale">ADD SALE</string>
+
+</resources>
